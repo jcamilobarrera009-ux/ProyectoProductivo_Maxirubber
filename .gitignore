@@ -1,0 +1,18 @@
+# Configuraciones locales y datos sensibles
+.env
+.env.*
+!.env.example
+config.local.php
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Configuracion local de VS Code
+.vscode/settings.json

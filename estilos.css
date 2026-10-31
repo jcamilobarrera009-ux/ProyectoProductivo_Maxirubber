@@ -1,0 +1,765 @@
+/* =====================================================================
+   MAXIRUBBER S.A.S. - Hoja de estilos
+   Secciones:
+     1. Variables       6. Dashboard / menú    11. Factura
+     2. Reset y base    7. Topbar y contenido  12. Landing (Index.php)
+     3. Tipografía      8. Cards y paneles     13. Responsive
+     4. Formularios     9. Tablas y badges     14. Impresión
+     5. Botones y msgs 10. Form interior
+   ===================================================================== */
+
+/* ---------- 1. VARIABLES ---------- */
+:root {
+    --bg:        #F7F9FC;
+    --bg-2:      #FFFFFF;
+    --bg-3:      #F8FAFD;
+    --bg-hover:  #EEF4FC;
+    --border:    #DCE5F0;
+    --blue:      #2E6BE6;
+    --blue-soft: #3D7CF5;
+    --blue-dim:  rgba(46, 107, 230, 0.12);
+    --amber:     #E8A020;
+    --text-1:    #14263D;
+    --text-2:    #526780;
+    --text-3:    #71839A;
+    --success:   #27AE7A;
+    --danger:    #C0433D;
+    --radius:    10px;
+    --font:      'Inter', -apple-system, 'Segoe UI', Arial, sans-serif;
+    --mono:      'JetBrains Mono', Consolas, 'Courier New', monospace;
+}
+
+/* ---------- 2. RESET Y BASE ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-1);
+    min-height: 100vh;
+    font-size: 13.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--blue-soft); text-decoration: none; transition: color .15s; }
+a:hover { color: var(--text-1); }
+
+/* ---------- 3. TIPOGRAFÍA ---------- */
+h1, h2, h3 { color: var(--text-1); font-weight: 600; margin-bottom: 14px; }
+h1 { font-size: 1.4rem; }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 1rem; }
+
+.separador { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+/* ---------- 4. FORMULARIOS ---------- */
+label {
+    display: block;
+    font-size: .78rem;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 5px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-1);
+    font-family: var(--font);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    appearance: none;
+}
+input::placeholder, textarea::placeholder { color: var(--text-3); font-size: 12px; }
+input:focus, select:focus, textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(46, 107, 230, .14);
+}
+input[readonly] { background: #EEF2F7; color: var(--text-2); cursor: not-allowed; }
+select:disabled { background-color: #EEF2F7; color: var(--text-2); cursor: not-allowed; }
+
+/* Estados que puede poner Validaciones.js */
+input.error, select.error, textarea.error { border-color: var(--danger); }
+input.ok,    select.ok,    textarea.ok    { border-color: var(--success); }
+
+select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23526780' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-color: var(--bg-3);
+    padding-right: 32px;
+}
+select option { background: var(--bg-2); color: var(--text-1); }
+
+textarea { resize: vertical; min-height: 80px; }
+
+form { display: flex; flex-direction: column; gap: 13px; }
+
+.field-hint  { display: block; font-size: 11px; color: var(--text-3); margin-top: 3px; }
+.field-error { display: block; font-size: 11px; color: #E05A54; margin-top: 3px; }
+
+/* ---------- 5. BOTONES Y MENSAJES ---------- */
+button, .btn {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    letter-spacing: .1px;
+    line-height: 1.4;
+}
+button       { background: var(--blue); color: #fff; width: 100%; }
+button:hover { background: var(--blue-soft); }
+
+.btn       { width: auto; background: var(--blue); color: #fff; }
+.btn:hover { background: var(--blue-soft); color: #fff; }
+
+.btn-ghost       { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text-1); }
+
+.btn-danger       { background: rgba(192,67,61,.10); color: #C0433D; border: 1px solid rgba(192,67,61,.25); }
+.btn-danger:hover { background: rgba(192,67,61,.20); color: #A8332E; }
+
+.btn-sm   { padding: 5px 12px; font-size: 12px; }
+.btn-lg   { padding: 11px 22px; font-size: 14px; }
+.btn-full { width: 100%; }
+
+.mensaje {
+    font-size: 12.5px;
+    padding: 9px 13px;
+    border-radius: var(--radius);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+.mensaje.error { background: rgba(192,67,61,.10);  color: #B03A34; border: 1px solid rgba(192,67,61,.22); }
+.mensaje.exito { background: rgba(39,174,122,.10); color: #1E8A60; border: 1px solid rgba(39,174,122,.25); }
+.mensaje.info  { background: rgba(46,107,230,.10); color: #2459C4; border: 1px solid rgba(46,107,230,.22); }
+
+.link-center {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--text-3);
+}
+.link-center:hover { color: var(--blue-soft); }
+
+/* Contenedor de login / registro */
+.container {
+    width: 100%;
+    max-width: 390px;
+    margin: 70px auto;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 30px 26px;
+}
+.logo { text-align: center; margin-bottom: 22px; }
+.logo h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: .3px; margin: 0; }
+.logo p  { font-family: var(--mono); font-size: 9.5px; color: var(--text-3); letter-spacing: 1px; margin-top: 4px; }
+
+/* ---------- 6. DASHBOARD / MENÚ LATERAL ---------- */
+.dashboard { display: flex; min-height: 100vh; }
+
+.menu {
+    width: 210px;
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+.menu-brand { padding: 18px 16px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.menu-brand-name { font-size: 14.5px; font-weight: 600; }
+.menu-brand-tag  { font-family: var(--mono); font-size: 9px; color: var(--text-3); letter-spacing: 1px; margin-top: 2px; }
+
+.menu-nav { padding: 10px 8px; flex: 1; overflow-y: auto; }
+.menu-titulo {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    padding: 8px 8px 4px;
+    margin-top: 4px;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    color: var(--text-2);
+    font-size: 13px;
+    transition: background .14s, color .14s;
+    margin-bottom: 1px;
+    border: 1px solid transparent;
+}
+.menu a:hover { background: var(--bg-hover); color: var(--text-1); }
+.menu a.activo {
+    background: var(--blue-dim);
+    color: #2459C4;
+    font-weight: 500;
+    border-color: rgba(46, 107, 230, .22);
+}
+
+.menu-footer { padding: 10px 8px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.menu-user { display: flex; align-items: center; gap: 9px; padding: 8px 9px; border-radius: var(--radius); background: var(--bg-3); }
+.menu-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: #fff;
+    flex-shrink: 0;
+}
+.menu-user-name { font-size: 12.5px; font-weight: 500; line-height: 1.3; }
+.menu-user-role { font-family: var(--mono); font-size: 9px; color: var(--text-3); }
+
+.cerrar-sesion {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 7px 10px !important;
+    color: #C0433D !important;
+    font-size: 12.5px !important;
+    border-radius: var(--radius);
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    width: 100%;
+}
+.cerrar-sesion:hover { background: rgba(192,67,61,.09) !important; color: #A8332E !important; }
+
+/* ---------- 7. CONTENIDO Y TOPBAR ---------- */
+.contenido { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-2);
+    flex-shrink: 0;
+}
+.topbar h1 { font-size: 15px; font-weight: 600; margin: 0; }
+.topbar-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+.topbar .usuario-info { font-size: 12px; color: var(--text-3); }
+.topbar .usuario-info span { color: var(--blue-soft); }
+
+.page-body { padding: 22px 24px; flex: 1; overflow-y: auto; }
+
+/* ---------- 8. CARDS Y PANELES ---------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+.card .card-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+}
+.card .card-numero { font-size: 26px; font-weight: 600; line-height: 1; }
+.card .card-hint   { font-size: 11px; color: var(--success); margin-top: 6px; }
+.card .card-hint.muted { color: var(--text-3); }
+
+.panel { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+}
+.panel-title { font-size: 12.5px; font-weight: 500; color: var(--text-2); }
+
+.buscador { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+.buscador input { max-width: 240px; }
+
+.search {
+    width: 180px;
+    padding: 5px 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-1);
+    font-family: var(--mono);
+    font-size: 11px;
+}
+
+/* ---------- 9. TABLAS Y BADGES ---------- */
+.tabla-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+
+th {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+    white-space: nowrap;
+}
+td { font-size: 13px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--bg-hover); }
+.td-mono { font-family: var(--mono); font-size: 12px; color: var(--text-2); }
+.td-actions { display: flex; gap: 6px; }
+
+.badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
+}
+.badge-green { background: rgba(39,174,122,.12); color: #1E8A60; border: 1px solid rgba(39,174,122,.25); }
+.badge-blue  { background: rgba(46,107,230,.12); color: #2459C4; border: 1px solid rgba(46,107,230,.22); }
+.badge-amber { background: rgba(232,160,32,.14); color: #A8700F; border: 1px solid rgba(232,160,32,.30); }
+.badge-red   { background: rgba(192,67,61,.12);  color: #B03A34; border: 1px solid rgba(192,67,61,.25); }
+.badge-gray  { background: #EEF2F7;              color: var(--text-3); border: 1px solid var(--border); }
+
+/* ---------- 10. FORMULARIO INTERIOR ---------- */
+.form-interior {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    max-width: 460px;
+}
+.form-interior button { width: 100%; margin-top: 4px; }
+
+.preview-total {
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 11px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.preview-total-label { font-size: 12px; color: var(--text-3); }
+.preview-total-valor { font-family: var(--mono); font-size: 16px; font-weight: 500; color: var(--blue); }
+
+/* ---------- 11. FACTURA ---------- */
+.factura {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 34px;
+    max-width: 640px;
+    color: #14263D;
+}
+.factura-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--blue);
+    margin-bottom: 22px;
+}
+.factura-empresa { font-size: 1.25rem; font-weight: 700; letter-spacing: .5px; }
+.factura-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.factura-meta { text-align: right; }
+.factura-titulo { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-3); }
+.factura-num { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--blue); margin-top: 2px; }
+.factura-fecha { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+
+.factura-datos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+    margin-bottom: 24px;
+}
+.factura-dato .lbl {
+    display: block;
+    font-size: 9.5px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 2px;
+}
+.factura-dato .val { font-size: 13.5px; font-weight: 500; }
+
+.factura-tabla { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.factura-tabla th {
+    background: #F1F5FA;
+    color: var(--text-2);
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+}
+.factura-tabla td { padding: 12px; border-bottom: 1px solid var(--border); }
+.factura-tabla .num { text-align: right; font-family: var(--mono); white-space: nowrap; }
+.factura-tabla tbody tr:hover td { background: transparent; }
+
+.factura-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 2px solid #14263D;
+    padding-top: 14px;
+    margin-top: 12px;
+}
+.factura-total .lbl { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: 1.2px; }
+.factura-total .val { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; }
+
+.factura-pie {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: .5px;
+}
+
+/* Compatibilidad con la versión anterior de la factura */
+.factura-row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+.factura-row .lbl { color: var(--text-3); }
+.factura-row .val { font-family: var(--mono); font-size: 12.5px; }
+
+/* ---------- 12. LANDING (Index.php) ---------- */
+.landing-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 75%, rgba(46,107,230,.07), transparent 28%),
+        linear-gradient(115deg, #FFFFFF 0%, #F8FAFD 65%, #EEF4FB 100%);
+    color: #14263D;
+}
+.landing-header {
+    width: min(1420px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+.landing-logo { display: block; width: min(340px, 42vw); height: auto; object-fit: contain; }
+.landing-tagline {
+    color: #18314F;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+}
+.landing-tagline::before, .landing-tagline::after {
+    content: "";
+    display: inline-block;
+    width: 28px; height: 2px;
+    background: #2E6BE6;
+}
+
+.landing-main {
+    width: min(1420px, calc(100% - 64px));
+    margin: auto;
+    padding: 30px 0 48px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(360px, .9fr);
+    align-items: center;
+    gap: clamp(36px, 7vw, 110px);
+}
+.landing-copy { position: relative; padding: 18px 0 24px; }
+.landing-eyebrow { color: #2E6BE6; font-size: 12px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px; }
+.landing-title {
+    font-size: clamp(38px, 4.2vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -1.8px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    max-width: 650px;
+}
+.landing-description { color: #5E718A; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.7; max-width: 570px; margin-bottom: 34px; }
+
+.landing-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 690px;
+    border-top: 1px solid #DCE5F0;
+    border-bottom: 1px solid #DCE5F0;
+    padding: 23px 0;
+}
+.landing-feature { padding: 0 18px; border-right: 1px solid #DCE5F0; }
+.landing-feature:first-child { padding-left: 0; }
+.landing-feature:last-child  { border-right: 0; padding-right: 0; }
+.landing-feature h2 { font-size: 15px; margin: 0 0 7px; }
+.landing-feature p  { font-size: 12px; line-height: 1.6; color: #71839A; margin: 0; }
+
+.landing-feature-icon {
+    width: 42px; height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: #EAF2FF;
+    color: #2164D4;
+    margin-bottom: 12px;
+}
+.landing-feature-icon svg {
+    width: 23px; height: 23px;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.landing-note { display: flex; align-items: center; gap: 10px; color: #71839A; font-size: 12px; margin-top: 23px; }
+.landing-note-mark {
+    width: 8px; height: 8px; flex: 0 0 8px;
+    border-radius: 50%;
+    background: #2E6BE6;
+    box-shadow: 0 0 0 5px rgba(46,107,230,.10);
+}
+
+.landing-login-card {
+    width: 100%;
+    max-width: 470px;
+    justify-self: center;
+    padding: clamp(28px, 3.5vw, 48px);
+    background: rgba(255,255,255,.94);
+    border: 1px solid rgba(220,229,240,.95);
+    border-radius: 22px;
+    box-shadow: 0 24px 70px rgba(25,55,95,.12);
+    text-align: center;
+    position: relative;
+    isolation: isolate;
+}
+.landing-login-card::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 12px -12px -12px 12px;
+    border-radius: 22px;
+    background: rgba(46,107,230,.07);
+}
+.landing-card-logo { width: min(280px, 100%); height: auto; margin: 0 auto 30px; object-fit: contain; }
+.landing-card-kicker { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #2E6BE6; margin-bottom: 10px; }
+.landing-card-title { font-size: 28px; line-height: 1.2; margin: 0 0 12px; }
+.landing-card-text { color: #71839A; font-size: 14px; line-height: 1.7; margin: 0 auto 28px; max-width: 300px; }
+
+.landing-login-button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    color: #fff;
+    background: linear-gradient(100deg, #2164D4, #2E79ED);
+    box-shadow: 0 8px 20px rgba(46,107,230,.22);
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform .2s, box-shadow .2s, background .2s;
+}
+.landing-login-button:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(46,107,230,.28);
+    background: linear-gradient(100deg, #1859C4, #2164D4);
+}
+.landing-register { margin-top: 22px; font-size: 13px; color: #71839A; }
+.landing-register a { color: #2164D4; font-weight: 700; }
+.landing-register a:hover { color: #14263D; text-decoration: underline; }
+
+.landing-card-divider { display: flex; align-items: center; gap: 12px; color: #9AA8B9; font-size: 10px; letter-spacing: 1.5px; margin-top: 28px; }
+.landing-card-divider::before, .landing-card-divider::after { content: ""; height: 1px; flex: 1; background: #E3EAF3; }
+
+.landing-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px max(32px, calc((100% - 1420px) / 2));
+    border-top: 1px solid #E4EAF2;
+    background: rgba(255,255,255,.72);
+    color: #71839A;
+    font-size: 11px;
+}
+.landing-footer-item { display: flex; align-items: center; gap: 9px; }
+.landing-footer-mark { color: #2164D4; font-size: 15px; }
+
+/* ---------- 13. RESPONSIVE ---------- */
+@media (max-width: 900px) {
+    .landing-main { grid-template-columns: 1fr; gap: 35px; padding-top: 20px; }
+    .landing-copy { text-align: center; }
+    .landing-title, .landing-description { margin-left: auto; margin-right: auto; }
+    .landing-features { margin: 0 auto; text-align: left; }
+    .landing-note { justify-content: center; }
+    .landing-login-card { max-width: 520px; }
+}
+
+@media (max-width: 720px) {
+    .dashboard { flex-direction: column; }
+    .menu { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+    .menu-nav { display: flex; flex-wrap: wrap; padding: 8px; gap: 4px; overflow-y: visible; }
+    .menu a { font-size: 11.5px; padding: 5px 9px; }
+    .menu-titulo { display: none; }
+    .menu-footer { padding: 8px; }
+
+    .contenido { overflow: visible; }
+    .page-body { padding: 16px; }
+    .topbar { padding: 12px 16px; }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .form-interior { max-width: 100%; }
+    .container { margin: 30px auto; }
+
+    .factura { padding: 20px; max-width: 100%; }
+    .factura-header { flex-direction: column; }
+    .factura-meta { text-align: left; }
+    .factura-datos { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+    .landing-header, .landing-main { width: calc(100% - 36px); }
+    .landing-header { padding: 18px 0; }
+    .landing-logo { width: min(250px, 68vw); }
+    .landing-tagline { display: none; }
+    .landing-main { padding: 20px 0 34px; gap: 26px; }
+    .landing-title { font-size: 39px; letter-spacing: -1px; }
+    .landing-description { font-size: 15px; margin-bottom: 25px; }
+    .landing-features { grid-template-columns: 1fr; padding: 6px 0; }
+    .landing-feature, .landing-feature:first-child, .landing-feature:last-child {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        column-gap: 12px;
+        padding: 15px 0;
+        border-right: 0;
+        border-bottom: 1px solid #E3EAF3;
+    }
+    .landing-feature:last-child { border-bottom: 0; }
+    .landing-feature-icon { grid-row: span 2; margin: 0; }
+    .landing-feature h2 { margin-bottom: 3px; }
+    .landing-feature p { grid-column: 2; }
+    .landing-login-card { padding: 28px 22px; border-radius: 17px; }
+    .landing-card-logo { width: 235px; margin-bottom: 23px; }
+    .landing-card-title { font-size: 25px; }
+    .landing-footer { flex-direction: column; align-items: flex-start; padding: 16px 18px; gap: 8px; }
+}
+
+/* ---------- 14. IMPRESIÓN: solo se imprime la factura ---------- */
+@media print {
+    @page { size: A4; margin: 14mm; }
+
+    .menu,
+    .topbar,
+    .no-imprimir { display: none !important; }
+
+    html, body {
+        background: #fff !important;
+        min-height: 0;
+        font-size: 12pt;
+    }
+
+    .dashboard,
+    .contenido { display: block; overflow: visible; min-height: 0; }
+
+    .contenido > div { padding: 0 !important; }
+
+    .factura {
+        max-width: 100%;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        page-break-inside: avoid;
+    }
+    .factura-tabla th { background: #F1F5FA !important; }
+}
+/* =====================================================================
+   14. IMPRESIÓN: Ocultar dashboard y mostrar solo la factura
+   ===================================================================== */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
+    }
+
+    /* Ocultar completamente el menú lateral, la barra superior y formularios */
+    .menu,
+    .topbar,
+    form,
+    .btn,
+    .no-print,
+    header,
+    nav {
+        display: none !important;
+    }
+
+    /* Limpiar fondos y márgenes de la página para impresión limpia */
+    html, body {
+        background: #fff !important;
+        color: #14263D !important;
+        min-height: 0 !important;
+        font-size: 12pt !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Remover contenedores de grilla del dashboard */
+    .dashboard,
+    .contenido,
+    .page-body {
+        display: block !important;
+        overflow: visible !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Hacer que la factura o contenedor interior ocupe toda la hoja sin bordes ni sombras */
+    .factura,
+    .form-interior,
+    .panel {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
