@@ -234,11 +234,8 @@ if ($id <= 0) {
 </script>
 <?php endif; ?>
  
-</body>
-</html>
-<?php endif; ?>
-</script>
-<?php endif; ?>
 
 </body>
 </html>
+<?php endif; ?>
+

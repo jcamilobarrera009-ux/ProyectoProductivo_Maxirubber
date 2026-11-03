@@ -1,18 +1,28 @@
 <?php
 session_start();
 require_once 'conexion.php';
-
+ 
+// true  = cualquiera puede crear una cuenta, siempre con rol Empleado.
+// false = solo un Administrador con sesión puede registrar usuarios.
+define('REGISTRO_PUBLICO', true);
+ 
+$esAdmin = (($_SESSION['rol'] ?? '') === 'Administrador');
+if (!$esAdmin && !REGISTRO_PUBLICO) {
+    header('Location: InicioSesion.php');
+    exit;
+}
+ 
 $msg  = '';
 $tipo = '';
-
+ 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario    = trim($_POST['usuario']    ?? '');
     $contrasena = trim($_POST['contrasena'] ?? '');
     $confirmar  = trim($_POST['confirmar']  ?? '');
-
-    // El rol siempre es Empleado al registrarse; solo un Admin puede asignar Administrador
-    $rol = 'Empleado';
-
+    // Solo un Administrador puede elegir el rol; el registro público siempre crea Empleados
+    $rol        = $esAdmin ? ($_POST['rol'] ?? 'Empleado') : 'Empleado';
+    if (!in_array($rol, ['Empleado', 'Administrador'], true)) { $rol = 'Empleado'; }
+ 
     if (!$usuario || !$contrasena || !$confirmar) {
         $msg = 'Completa todos los campos.'; $tipo = 'error';
     } elseif (!preg_match('/[a-zA-Z]/', $usuario)) {
@@ -24,16 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($contrasena !== $confirmar) {
         $msg = 'Las contraseñas no coinciden.'; $tipo = 'error';
     } else {
+        // Verificar si el usuario ya existe
         $check = $pdo->prepare("SELECT id FROM usuarios WHERE usuario = ? LIMIT 1");
         $check->execute([$usuario]);
         if ($check->fetch()) {
             $msg = 'Ese usuario ya existe.'; $tipo = 'error';
         } else {
-            $pdo->prepare(
+            $stmt = $pdo->prepare(
                 "INSERT INTO usuarios (usuario, contrasena, rol) VALUES (?, ?, ?)"
-            )->execute([$usuario, $contrasena, $rol]);
-            $msg  = 'Usuario registrado con éxito.';
-            $tipo = 'exito';
+            );
+            $stmt->execute([$usuario, password_hash($contrasena, PASSWORD_DEFAULT), $rol]);
+            $msg = 'Usuario registrado con éxito.'; $tipo = 'exito';
         }
     }
 }
@@ -52,42 +63,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>MAXIRUBBER</h1>
         <p>Registro de Usuario Interno</p>
     </div>
-
+ 
     <?php if ($msg): ?>
         <div class="mensaje <?= $tipo ?>"><?= htmlspecialchars($msg) ?></div>
         <?php if ($tipo === 'exito'): ?>
-            <script>setTimeout(() => location.href = 'InicioSesion.php', 1500);</script>
+            <script>setTimeout(() => location.href = '<?= $esAdmin ? 'GestionUsuario.php' : 'InicioSesion.php' ?>', 1500);</script>
         <?php endif; ?>
     <?php endif; ?>
-
+ 
     <form method="POST" novalidate>
         <label for="usuario">Usuario</label>
         <input type="text" id="usuario" name="usuario"
                placeholder="Ej: juan_garcia" maxlength="20" autocomplete="off"
                value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>">
-
+ 
         <label for="contrasena">Contraseña</label>
         <input type="password" id="contrasena" name="contrasena"
                placeholder="Mínimo 6 caracteres" maxlength="30">
-
+ 
         <label for="confirmar">Confirmar contraseña</label>
         <input type="password" id="confirmar" name="confirmar"
                placeholder="Repite la contraseña" maxlength="30">
-
-        <!-- Sin selector de rol: todos se registran como Empleado -->
-        <!-- El Administrador puede cambiar el rol desde Gestión de Usuarios -->
-
+ 
+        <?php if ($esAdmin): ?>
+        <label for="rol">Rol</label>
+        <select id="rol" name="rol">
+            <option value="Empleado">Empleado</option>
+            <option value="Administrador">Administrador</option>
+        </select>
+        <?php endif; ?>
+ 
         <button type="submit">Registrar Usuario</button>
     </form>
     <a href="InicioSesion.php" class="link-center">¿Ya tienes cuenta? Inicia sesión</a>
 </div>
-
+ 
 <script src="Validaciones.js"></script>
 <script>
     V.bloquear('usuario',    /[a-zA-Z0-9_]/);
     V.bloquear('contrasena', /[^\s]/);
     V.bloquear('confirmar',  /[^\s]/);
-
+ 
     document.getElementById('usuario').addEventListener('blur',    () => V.usuario('usuario'));
     document.getElementById('contrasena').addEventListener('blur', () => V.contrasena('contrasena'));
     document.getElementById('confirmar').addEventListener('blur', function() {

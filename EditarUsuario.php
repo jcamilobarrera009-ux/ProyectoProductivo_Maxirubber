@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nuevoUsuario  = trim($_POST['usuario']    ?? '');
     $nuevaContrasena = trim($_POST['contrasena'] ?? '');
     $rol           = $_POST['rol']             ?? 'Empleado';
+    if (!in_array($rol, ['Empleado', 'Administrador'], true)) { $rol = 'Empleado'; }
 
     if (!$nuevoUsuario) {
         $msg = 'El nombre de usuario es obligatorio.'; $tipo = 'error';
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $msg = 'La contraseña debe tener mínimo 6 caracteres.'; $tipo = 'error';
                 } else {
                     $pdo->prepare("UPDATE usuarios SET usuario = ?, contrasena = ?, rol = ? WHERE id = ?")
-                        ->execute([$nuevoUsuario, $nuevaContrasena, $rol, $id]);
+                        ->execute([$nuevoUsuario, password_hash($nuevaContrasena, PASSWORD_DEFAULT), $rol, $id]);
                     $msg = 'Usuario actualizado con éxito (contraseña cambiada).'; $tipo = 'exito';
                 }
             } else {

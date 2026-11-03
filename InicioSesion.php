@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'conexion.php';
-
+ 
 // ── CORRECCIÓN: redirect por rol para evitar loop infinito ──────
 //   Antes: todos iban a GestionUsuario.php, pero ese módulo
 //   bloquea a empleados → loop infinito para rol Empleado.
@@ -12,25 +12,48 @@ if (isset($_SESSION['usuario_id'])) {
     header('Location: ' . $destino);
     exit;
 }
-
+ 
 $error = '';
-
+ 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario    = trim($_POST['usuario']    ?? '');
     $contrasena = trim($_POST['contrasena'] ?? '');
-
+ 
     if (!$usuario || !$contrasena) {
         $error = 'Completa todos los campos.';
     } else {
         $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE usuario = ? LIMIT 1");
         $stmt->execute([$usuario]);
         $fila = $stmt->fetch();
-
-        if ($fila && $fila['contrasena'] === $contrasena) {
+ 
+        // Verificación de contraseña con bcrypt (password_verify).
+        // Compatibilidad: si la contraseña guardada aún está en texto plano
+        // (usuarios creados antes del cifrado), se acepta una sola vez y se
+        // convierte a hash automáticamente.
+        $ok = false;
+        if ($fila) {
+            $guardada = $fila['contrasena'];
+            if (password_get_info($guardada)['algo']) {
+                $ok = password_verify($contrasena, $guardada);
+                if ($ok && password_needs_rehash($guardada, PASSWORD_DEFAULT)) {
+                    $pdo->prepare("UPDATE usuarios SET contrasena = ? WHERE id = ?")
+                        ->execute([password_hash($contrasena, PASSWORD_DEFAULT), $fila['id']]);
+                }
+            } else {
+                $ok = hash_equals($guardada, $contrasena);
+                if ($ok) {
+                    $pdo->prepare("UPDATE usuarios SET contrasena = ? WHERE id = ?")
+                        ->execute([password_hash($contrasena, PASSWORD_DEFAULT), $fila['id']]);
+                }
+            }
+        }
+ 
+        if ($ok) {
+            session_regenerate_id(true);   // evita fijación de sesión
             $_SESSION['usuario_id'] = $fila['id'];
             $_SESSION['usuario']    = $fila['usuario'];
             $_SESSION['rol']        = $fila['rol'];
-
+ 
             // Redirigir según rol
             $destino = ($fila['rol'] === 'Administrador')
                 ? 'GestionUsuario.php'
@@ -57,28 +80,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>MAXIRUBBER</h1>
         <p>Sistema de Producción, Ventas y Facturación</p>
     </div>
-
+ 
     <?php if ($error): ?>
         <div class="mensaje error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
-
+ 
     <form method="POST" novalidate>
         <label for="usuario">Usuario</label>
         <input type="text" id="usuario" name="usuario"
                placeholder="Tu nombre de usuario"
                maxlength="20" autocomplete="off"
                value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>">
-
+ 
         <label for="contrasena">Contraseña</label>
         <input type="password" id="contrasena" name="contrasena"
                placeholder="Tu contraseña" maxlength="30">
-
+ 
         <button type="submit">Entrar al sistema</button>
     </form>
-
+ 
     <a href="RegistrarUsuario.php" class="link-center">¿No tienes cuenta? Regístrate</a>
 </div>
-
+ 
 <script src="Validaciones.js"></script>
 <script>
     V.bloquear('usuario',    /[a-zA-Z0-9_]/);
